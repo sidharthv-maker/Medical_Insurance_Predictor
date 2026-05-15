@@ -20,8 +20,8 @@ X = data[['age','sex','bmi','children','smoker','region', 'is_obese', 'is_older'
 
 X_train, X_val, y_train, y_val = train_test_split(X,y,test_size=0.2, random_state=0)
 
-numcol=['age', 'bmi', 'is_obese', 'is_older', 'smoker_obese', 'smoker_older']
-catcol = ['sex', 'children', 'smoker' ,'region']
+numcol=['age', 'bmi', 'is_obese', 'is_older', 'smoker_obese',  'children',  'smoker_older']
+catcol = ['sex','smoker','region']
 
 numpre = SimpleImputer(strategy='median')
 
@@ -37,7 +37,7 @@ preprocess = ColumnTransformer(transformers=[
     ('num', numpre, numcol),
     ('cat', catpre, catcol)
 ])
-model = XGBRegressor(n_estimators=500, learning_rate = 0.05)
+model = XGBRegressor(n_estimators=500, learning_rate = 0.05, random_state = 0)
 
 pipeline = Pipeline(steps=[
     ('preprocessor', preprocess),
@@ -71,7 +71,7 @@ if (smoker == "no" or bmi < 30):
 smoker_older = 1 
 if (smoker == "no" or age < 50):
     smoker_older = 0
-    
+
 user_input = pd.DataFrame([[age, sex, bmi, children, smoker, region,is_obese, is_older, smoker_obese, smoker_older]],columns=['age', 'sex', 'bmi', 'children', 'smoker', 'region','is_obese', 'is_older', 'smoker_obese', 'smoker_older'])
 prediction = pipeline.predict(user_input)
 print(f"Predicted Insurance Charge: ${round(prediction[0], 2)}")
